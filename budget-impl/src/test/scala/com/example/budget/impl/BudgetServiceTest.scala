@@ -2,13 +2,10 @@ package com.example.budget.impl
 
 import java.util.UUID
 
-import com.lightbend.lagom.scaladsl.api.transport.{NotFound, TransportException}
-import com.lightbend.lagom.scaladsl.persistence.PersistentEntity.InvalidCommandException
+import com.lightbend.lagom.scaladsl.api.transport.NotFound
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
 import org.scalatest.{AsyncWordSpec, BeforeAndAfterAll, Matchers}
-
-import scala.util.Failure
 
 class BudgetServiceTest extends AsyncWordSpec with Matchers with BeforeAndAfterAll {
   private val server =
@@ -50,7 +47,7 @@ class BudgetServiceTest extends AsyncWordSpec with Matchers with BeforeAndAfterA
         _ <- client.delete(entryId).invoke()
         answer <- client.get(entryId).invoke()
       } yield fail()).recover {
-        case _:NotFound => succeed
+        case _: NotFound => succeed
       }
     }
   }

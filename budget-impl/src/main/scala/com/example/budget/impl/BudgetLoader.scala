@@ -3,10 +3,11 @@ package com.example.budget.impl
 import com.lightbend.lagom.scaladsl.api.ServiceLocator.NoServiceLocator
 import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceLocator}
 import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
-import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraPersistenceComponents
+import com.lightbend.lagom.scaladsl.persistence.jdbc.JdbcPersistenceComponents
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
 import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext, LagomApplicationLoader, LagomServer}
 import com.softwaremill.macwire._
+import play.api.db.HikariCPComponents
 import play.api.libs.ws.ahc.AhcWSComponents
 
 class BudgetLoader extends LagomApplicationLoader {
@@ -23,7 +24,8 @@ class BudgetLoader extends LagomApplicationLoader {
 
 abstract class BudgetApplication(context: LagomApplicationContext)
   extends LagomApplication(context)
-    with CassandraPersistenceComponents
+    with JdbcPersistenceComponents
+    with HikariCPComponents
     with AhcWSComponents {
   override def lagomServer: LagomServer = serverFor[BudgetService](wire[BudgetServiceImpl])
 
