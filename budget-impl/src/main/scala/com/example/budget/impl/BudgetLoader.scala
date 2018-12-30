@@ -29,5 +29,5 @@ abstract class BudgetApplication(context: LagomApplicationContext)
 
   override def jsonSerializerRegistry: JsonSerializerRegistry = BudgetSerializerRegistry
 
-  persistentEntityRegistry.register(wire[BudgetEntryEntity])
+  persistentEntityRegistry.register(wire[BudgetEntity])
 }
