@@ -41,7 +41,6 @@ class BudgetServiceTest extends AsyncWordSpec with Matchers with BeforeAndAfterA
     }
 
     "allow delete entry" in {
-      val updated = testEntry.copy(allocationTerm = 6)
       (for {
         entryId <- client.create().invoke(testEntry)
         _ <- client.delete(entryId).invoke()
