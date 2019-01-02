@@ -1,5 +1,6 @@
 package com.example.budget.impl
 
+import java.time.LocalDate
 import java.util.UUID
 
 import akka.{Done, NotUsed}
@@ -9,9 +10,13 @@ import play.api.libs.json._
 
 trait BudgetService extends Service {
   def create(): ServiceCall[BudgetEntry, UUID]
+
   def getAll(): ServiceCall[NotUsed, Map[UUID, BudgetEntry]]
+
   def get(id: UUID): ServiceCall[NotUsed, BudgetEntry]
+
   def update(id: UUID): ServiceCall[BudgetEntry, Done]
+
   def delete(id: UUID): ServiceCall[NotUsed, Done]
 
   override def descriptor: Descriptor = {
@@ -26,7 +31,14 @@ trait BudgetService extends Service {
   }
 }
 
-final case class BudgetEntry(departmentId: UUID, projectId: UUID, allocationTerm: Int, amount: BigDecimal)
+final case class BudgetEntry(
+  departmentId: UUID,
+  projectId: UUID,
+  allocationTerm: Int,
+  amount: BigDecimal,
+  createdBy: UUID,
+  createDate: LocalDate)
+
 object BudgetEntry {
   implicit val format: Format[BudgetEntry] = Json.format[BudgetEntry]
 

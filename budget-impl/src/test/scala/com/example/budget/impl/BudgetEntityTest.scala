@@ -1,5 +1,6 @@
 package com.example.budget.impl
 
+import java.time.LocalDate
 import java.util.UUID
 
 import akka.actor.ActorSystem
@@ -30,19 +31,17 @@ class BudgetEntityTest extends WordSpec with Matchers with BeforeAndAfterAll {
     driver.getAllIssues should have size 0
   }
 
-  val testEntry = BudgetEntry(UUID.randomUUID(), UUID.randomUUID(), 12, 999.99)
-
   "BudgetEntity" should {
     "allow updating the budget entry" in withTestDriver { driver =>
-      val commandOutcome = driver.run(ChangeBudget(testEntry))
-      commandOutcome.events should contain only BudgetChanged(testEntry)
+      val commandOutcome = driver.run(ChangeBudget(Fixtures.entry))
+      commandOutcome.events should contain only BudgetChanged(Fixtures.entry)
 
       val queryOutcome = driver.run(GetBudget)
-      queryOutcome.replies should contain only testEntry
+      queryOutcome.replies should contain only Fixtures.entry
     }
 
     "allow deleting the budget entry" in withTestDriver { driver =>
-      driver.run(ChangeBudget(testEntry))
+      driver.run(ChangeBudget(Fixtures.entry))
       val commandOutcome = driver.run(DeleteBudget)
       commandOutcome.events should contain only BudgetDeleted
 

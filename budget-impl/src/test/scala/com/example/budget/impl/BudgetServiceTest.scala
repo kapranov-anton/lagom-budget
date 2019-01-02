@@ -1,7 +1,5 @@
 package com.example.budget.impl
 
-import java.util.UUID
-
 import com.lightbend.lagom.scaladsl.api.transport.NotFound
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
@@ -17,22 +15,20 @@ class BudgetServiceTest extends AsyncWordSpec with Matchers with BeforeAndAfterA
 
   override protected def afterAll(): Unit = server.stop()
 
-  val testEntry = BudgetEntry(UUID.randomUUID(), UUID.randomUUID(), 12, 999.99)
-
   "Budget service" should {
     "allow create entry" in {
       for {
-        entryId <- client.create().invoke(testEntry)
+        entryId <- client.create().invoke(Fixtures.entry)
         answer <- client.get(entryId).invoke()
       } yield {
-        answer shouldEqual testEntry
+        answer shouldEqual Fixtures.entry
       }
     }
 
     "allow update entry" in {
-      val updated = testEntry.copy(allocationTerm = 6)
+      val updated = Fixtures.entry.copy(allocationTerm = 6)
       for {
-        entryId <- client.create().invoke(testEntry)
+        entryId <- client.create().invoke(Fixtures.entry)
         _ <- client.update(entryId).invoke(updated)
         answer <- client.get(entryId).invoke()
       } yield {
@@ -42,9 +38,9 @@ class BudgetServiceTest extends AsyncWordSpec with Matchers with BeforeAndAfterA
 
     "allow delete entry" in {
       (for {
-        entryId <- client.create().invoke(testEntry)
+        entryId <- client.create().invoke(Fixtures.entry)
         _ <- client.delete(entryId).invoke()
-        answer <- client.get(entryId).invoke()
+        _ <- client.get(entryId).invoke()
       } yield fail()).recover {
         case _: NotFound => succeed
       }
