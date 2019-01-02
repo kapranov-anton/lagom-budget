@@ -12,7 +12,7 @@ class BudgetEventProcessor(readSide: SlickReadSide,
 
   override def buildHandler(): ReadSideProcessor.ReadSideHandler[BudgetEvent] = {
     readSide.builder[BudgetEvent]("budgetEventOffset")
-      .setGlobalPrepare(budgetRepo.createTable)
+      .setGlobalPrepare(budgetRepo.migrations)
       .setEventHandler[BudgetChanged](e => budgetRepo.save(UUID.fromString(e.entityId), e.event.entry))
       .build()
   }

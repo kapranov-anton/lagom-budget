@@ -1,5 +1,6 @@
 package com.example.budget.impl
 
+import java.time.LocalDate
 import java.util.UUID
 
 import akka.{Done, NotUsed}
@@ -26,7 +27,14 @@ trait BudgetService extends Service {
   }
 }
 
-final case class BudgetEntry(departmentId: UUID, projectId: UUID, allocationTerm: Int, amount: BigDecimal)
+final case class BudgetEntry(
+  departmentId: UUID,
+  projectId: UUID,
+  allocationTerm: Int,
+  amount: BigDecimal,
+  createdBy: Option[UUID],
+  createDate: Option[LocalDate])
+
 object BudgetEntry {
   implicit val format: Format[BudgetEntry] = Json.format[BudgetEntry]
 

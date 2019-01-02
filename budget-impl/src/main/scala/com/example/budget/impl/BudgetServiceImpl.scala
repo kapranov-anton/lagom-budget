@@ -46,12 +46,7 @@ class BudgetServiceImpl(db: Database,
   override def getAll(): ServiceCall[NotUsed, Map[UUID, BudgetEntry]] =
     ServiceCall { _ =>
       db.run(budgetRepo.selectBudgetEntries()).map { entries =>
-        entries.map { e =>
-          e.id -> BudgetEntry(departmentId = e.departmentId,
-            projectId = e.projectId,
-            allocationTerm = e.allocationTerm,
-            amount = e.amount)
-        }.toMap
+        entries.map(DBBudgetEntryConverters.fromDB).toMap
       }
     }
 }
